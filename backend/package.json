@@ -1,0 +1,46 @@
+{
+  "name": "pdf-generator-saas-backend",
+  "version": "1.0.0",
+  "description": "Professional PDF eBook & Document Generator SaaS - Backend API + Redis Queue + Puppeteer Rendering Workers",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "worker": "node src/queue/worker.js",
+    "dev:worker": "nodemon src/queue/worker.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:worker\""
+  },
+  "dependencies": {
+    "bullmq": "^5.12.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "ioredis": "^5.4.1",
+    "jsdom": "^30.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "lowdb": "^1.0.0",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.2.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^10.0.1",
+    "puppeteer": "^22.15.0",
+    "rss-parser": "^3.13.0",
+    "sanitize-html": "^2.13.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "allowScripts": {
+    "puppeteer@22.15.0": true,
+    "msgpackr-extract@3.0.4": true
+  }
+}

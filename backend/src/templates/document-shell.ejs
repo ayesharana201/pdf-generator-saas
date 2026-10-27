@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #202124;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.65;
+    }
+
+    body {
+      width: 210mm;
+      margin: 0 auto;
+    }
+
+    /* =========================================================
+       PAGE SYSTEM
+       ========================================================= */
+
+    .page {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+      padding: 24mm 20mm 25mm 20mm;
+      background: #ffffff;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .page:last-child {
+      page-break-after: auto;
+      break-after: auto;
+    }
+
+    /* =========================================================
+       COVER
+       ========================================================= */
+
+    .cover {
+      height: 297mm;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .cover-inner {
+      width: 160mm;
+      margin: 0 auto;
+    }
+
+    .cover-company {
+      margin-bottom: 18mm;
+      font-size: 11pt;
+      font-weight: 700;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      color: <%= brand.primaryColor || '#1f3a5f' %>;
+    }
+
+    .cover-line {
+      width: 38mm;
+      height: 1px;
+      margin: 0 auto 16mm;
+      background: <%= brand.primaryColor || '#1f3a5f' %>;
+    }
+
+    .cover-title {
+      margin: 0;
+      font-size: 30pt;
+      line-height: 1.15;
+      font-weight: 700;
+      color: #171717;
+      letter-spacing: -0.4px;
+    }
+
+    .cover-subtitle {
+      max-width: 135mm;
+      margin: 10mm auto 0;
+      font-size: 13pt;
+      line-height: 1.5;
+      color: #626262;
+      font-weight: 400;
+    }
+
+    .cover-meta {
+      margin-top: 22mm;
+      font-size: 9.5pt;
+      color: #777777;
+    }
+
+    .cover-source {
+      max-width: 135mm;
+      margin: 5mm auto 0;
+      font-size: 8.5pt;
+      line-height: 1.45;
+      color: #888888;
+      overflow-wrap: anywhere;
+    }
+
+    /* =========================================================
+       TABLE OF CONTENTS
+       ========================================================= */
+
+    .toc-page {
+      height: 297mm;
+      padding-top: 25mm;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .toc-header {
+      margin-bottom: 13mm;
+      padding-bottom: 5mm;
+      border-bottom: 2px solid <%= brand.primaryColor || '#1f3a5f' %>;
+    }
+
+    .toc-title {
+      margin: 0;
+      font-size: 21pt;
+      line-height: 1.2;
+      font-weight: 700;
+      color: <%= brand.primaryColor || '#1f3a5f' %>;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .toc-description {
+      margin: 4mm 0 0;
+      font-size: 9.5pt;
+      color: #777777;
+    }
+
+    .toc {
+      width: 100%;
+    }
+
+    .toc-entry {
+      display: flex;
+      align-items: baseline;
+      width: 100%;
+      margin: 0;
+      padding: 2.5mm 0;
+      line-height: 1.35;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .toc-entry.level-1 {
+      margin-top: 3mm;
+      font-size: 11.5pt;
+      font-weight: 700;
+    }
+
+    .toc-entry.level-2 {
+      padding-left: 7mm;
+      font-size: 10.5pt;
+      font-weight: 500;
+    }
+
+    .toc-entry.level-3 {
+      padding-left: 14mm;
+      font-size: 9.5pt;
+      font-weight: 400;
+    }
+
+    .toc-number {
+      flex: 0 0 auto;
+      min-width: 13mm;
+      padding-right: 2mm;
+      color: <%= brand.primaryColor || '#1f3a5f' %>;
+      font-weight: 700;
+    }
+
+    .toc-text {
+      flex: 0 1 auto;
+      color: #242424;
+      max-width: 125mm;
+    }
+
+    .toc-leader {
+      flex: 1 1 auto;
+      min-width: 8mm;
+      margin: 0 3mm;
+      border-bottom: 1px dotted #aaaaaa;
+      height: 1em;
+    }
+
+    .toc-page-number {
+      flex: 0 0 10mm;
+      text-align: right;
+      color: #555555;
+      font-size: 9pt;
+      font-weight: 600;
+    }
+
+    /* =========================================================
+       DOCUMENT CONTENT
+       ========================================================= */
+
+    .content-page {
+      page-break-after: auto;
+      break-after: auto;
+    }
+
+    .document-content {
+      width: 100%;
+      max-width: 170mm;
+      margin: 0 auto;
+    }
+
+    .document-content h1 {
+      margin: 10mm 0 5mm;
+      padding-bottom: 3mm;
+      border-bottom: 1.5px solid #d8dde3;
+      font-size: 21pt;
+      line-height: 1.2;
+      font-weight: 700;
+      color: <%= brand.primaryColor || '#1f3a5f' %>;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    .document-content h1:first-child {
+      margin-top: 0;
+    }
+
+    .document-content h2 {
+      margin: 8mm 0 3mm;
+      font-size: 15pt;
+      line-height: 1.3;
+      font-weight: 700;
+      color: #2c2c2c;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    .document-content h3 {
+      margin: 6mm 0 2.5mm;
+      font-size: 12pt;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #3c3c3c;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    .document-content p {
+      margin: 0 0 4mm;
+      font-size: 10.5pt;
+      line-height: 1.7;
+      color: #292929;
+      text-align: left;
+    }
+
+    .document-content ul,
+    .document-content ol {
+      margin: 3mm 0 5mm 7mm;
+      padding-left: 6mm;
+    }
+
+    .document-content li {
+      margin-bottom: 2mm;
+      padding-left: 1mm;
+      line-height: 1.6;
+    }
+
+    .document-content blockquote {
+      margin: 6mm 0;
+      padding: 4mm 6mm;
+      border-left: 3px solid <%= brand.primaryColor || '#1f3a5f' %>;
+      background: #f6f8fa;
+      color: #505050;
+    }
+
+    .document-content blockquote p {
+      margin-bottom: 0;
+    }
+
+    /* =========================================================
+       IMAGES
+       ========================================================= */
+
+    .document-content img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 7mm auto;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .document-content figure {
+      margin: 7mm 0;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      text-align: center;
+    }
+
+    .document-content figcaption {
+      margin-top: 2mm;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      color: #777777;
+      text-align: center;
+    }
+
+    /* =========================================================
+       TABLES
+       ========================================================= */
+
+    .document-content table {
+      width: 100%;
+      margin: 6mm 0;
+      border-collapse: collapse;
+      font-size: 9pt;
+      line-height: 1.45;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .document-content th,
+    .document-content td {
+      padding: 2.5mm 3mm;
+      border: 1px solid #d7dce1;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .document-content th {
+      background: #f0f3f6;
+      font-weight: 700;
+      color: #252525;
+    }
+
+    /* =========================================================
+       CODE
+       ========================================================= */
+
+    .document-content pre {
+      margin: 5mm 0;
+      padding: 5mm;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      background: #f4f5f7;
+      border: 1px solid #dfe2e6;
+      border-radius: 2mm;
+      font-family: "Courier New", monospace;
+      font-size: 8.5pt;
+      line-height: 1.5;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .document-content code {
+      font-family: "Courier New", monospace;
+      font-size: 0.9em;
+    }
+
+    .document-content :not(pre) > code {
+      padding: 0.5mm 1mm;
+      background: #f0f1f3;
+      border-radius: 1mm;
+    }
+
+    /* =========================================================
+       LINKS
+       ========================================================= */
+
+    .document-content a {
+      color: <%= brand.primaryColor || '#1f3a5f' %>;
+      text-decoration: none;
+    }
+
+    /* =========================================================
+       HORIZONTAL RULE
+       ========================================================= */
+
+    .document-content hr {
+      margin: 8mm 0;
+      border: 0;
+      border-top: 1px solid #d9dde2;
+    }
+
+    /* =========================================================
+       RSS SUPPORT
+       ========================================================= */
+
+    .document-content .rss-item {
+      margin-bottom: 10mm;
+      padding-bottom: 6mm;
+      border-bottom: 1px solid #e1e4e8;
+      page-break-inside: avoid;
+    }
+
+    .document-content .rss-meta {
+      margin-top: -1mm;
+      margin-bottom: 4mm;
+      font-size: 8.5pt;
+      color: #777777;
+    }
+
+    .document-content .rss-link {
+      margin-top: 4mm;
+      font-size: 8.5pt;
+      color: #777777;
+      overflow-wrap: anywhere;
+    }
+
+    /* =========================================================
+       GENERAL PRINT RULES
+       ========================================================= */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      orphans: 3;
+      widows: 3;
+    }
+
+    p,
+    li {
+      orphans: 3;
+      widows: 3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =======================================================
+       COVER PAGE
+       ======================================================= -->
+
+  <section class="page cover">
+    <div class="cover-inner">
+
+      <% if (brand.companyName) { %>
+        <div class="cover-company">
+          <%= brand.companyName %>
+        </div>
+      <% } %>
+
+      <div class="cover-line"></div>
+
+      <h1 class="cover-title">
+        <%= title || 'Untitled Document' %>
+      </h1>
+
+      <% if (subtitle) { %>
+        <p class="cover-subtitle">
+          <%= subtitle %>
+        </p>
+      <% } %>
+
+      <div class="cover-meta">
+        Generated on <%= generatedDate %>
+      </div>
+
+      <% if (brand.sourceUrl) { %>
+        <div class="cover-source">
+          <%= brand.sourceUrl %>
+        </div>
+      <% } %>
+
+    </div>
+  </section>
+
+
+  <!-- =======================================================
+       TABLE OF CONTENTS
+       ======================================================= -->
+
+  <section class="page toc-page">
+
+    <div class="toc-header">
+      <h1 class="toc-title">
+        Table of Contents
+      </h1>
+
+      <p class="toc-description">
+        Document structure and section index
+      </p>
+    </div>
+
+    <div class="toc">
+
+      <% if (headings && headings.length) { %>
+
+        <% headings.forEach(function(h) { %>
+
+          <div class="toc-entry level-<%= h.level %>">
+
+            <span class="toc-number">
+              <%= h.number || '' %>
+            </span>
+
+            <span class="toc-text">
+              <%= h.text || '' %>
+            </span>
+
+            <span class="toc-leader"></span>
+
+            <span class="toc-page-number">
+              <%= h.page || '' %>
+            </span>
+
+          </div>
+
+        <% }); %>
+
+      <% } else { %>
+
+        <div class="toc-entry level-1">
+          <span class="toc-text">
+            No sections available
+          </span>
+        </div>
+
+      <% } %>
+
+    </div>
+
+  </section>
+
+
+  <!-- =======================================================
+       DOCUMENT CONTENT
+       ======================================================= -->
+
+  <section class="page content-page">
+
+    <main class="document-content">
+      <%- bodyHtml || '' %>
+    </main>
+
+  </section>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+For **your PDF Generator SaaS project**, you currently have two ways to run it locally:
+
+### Option 1 — Docker production version
+
+This is the one you've been using:
+
+```powershell
+cd C:\Users\dell\pdf-generator-saas
+
+docker compose --env-file .\.env.production -f .\docker-compose.prod.yml up -d
+```
+RUN
+http://localhost:8080
+
+
+To stop it:
+
+```powershell
+docker compose --env-file .\.env.production -f .\docker-compose.prod.yml down
+```
+
+### Option 2 — Development version
+
+Open **two PowerShell terminals**.
+
+**Terminal 1 — Backend:**
+
+```powershell
+cd C:\Users\dell\pdf-generator-saas
+npm run dev
+```
+
+**Terminal 2 — Frontend:**
+
+```powershell
+cd C:\Users\dell\pdf-generator-saas\frontend
+npm run dev
+```
+
+
+
+
+Then browse to **[http://localhost:8080](http://localhost:8080)**.
+
+That's all you need to open and run the project locally.

@@ -1,0 +1,81 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: pdfgen-redis-prod
+    volumes:
+      - redis-prod-data:/data
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pdfgen-backend-prod
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_SESSION_TTL: ${ADMIN_SESSION_TTL:-28800}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      API_KEY_HEADER: ${API_KEY_HEADER:-x-api-key}
+      OUTPUT_DIR: /app/storage/output
+      UPLOAD_DIR: /app/storage/uploads
+      DB_FILE: /app/storage/db.json
+      QUEUE_NAME: ${QUEUE_NAME:-pdf-render-queue}
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-3}
+      MAX_BATCH_SIZE: ${MAX_BATCH_SIZE:-50}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-30}
+      API_KEY_MONTHLY_LIMIT: ${API_KEY_MONTHLY_LIMIT:-100}
+      API_KEY_QUOTA_WINDOW_DAYS: ${API_KEY_QUOTA_WINDOW_DAYS:-30}
+    volumes:
+      - app-storage:/app/storage
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+    container_name: pdfgen-worker-prod
+    environment:
+      NODE_ENV: production
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      OUTPUT_DIR: /app/storage/output
+      UPLOAD_DIR: /app/storage/uploads
+      DB_FILE: /app/storage/db.json
+      QUEUE_NAME: ${QUEUE_NAME:-pdf-render-queue}
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-3}
+    volumes:
+      - app-storage:/app/storage
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pdfgen-frontend-prod
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  redis-prod-data:
+  app-storage:
+
